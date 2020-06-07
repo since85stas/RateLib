@@ -16,12 +16,15 @@ import stas.batura.ratelibrary.RateLibrary;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private RateLibrary rateLibrary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final RateLibrary rateLibrary = new RateLibrary(this, getSupportFragmentManager());
+         rateLibrary = new  RateLibrary.Builder().setContext(this)
+                 .setFragManager(getSupportFragmentManager())
+                 .setNumActions(5)
+                 .build();
 
         setContentView(R.layout.activity_main);
 //        setContentView(view);
@@ -39,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        rateLibrary.checkRates();
     }
 
     @Override

@@ -10,6 +10,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class MyDialogFragment extends DialogFragment {
+
+    DialogClick inter;
+
+    public MyDialogFragment(DialogClick inter) {
+        this.inter = inter;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -25,6 +32,7 @@ public class MyDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 Toast.makeText(getActivity(), R.string.dialogYesthx,
                         Toast.LENGTH_SHORT).show();
+                inter.onYes();
 //                ((MainActivity) getActivity()).okClicked();
             }
         });
@@ -32,6 +40,7 @@ public class MyDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 Toast.makeText(getActivity(), R.string.dialogNoThx, Toast.LENGTH_SHORT)
                         .show();
+                inter.onNo();
 //                ((MainActivity) getActivity()).cancelClicked();
             }
         });

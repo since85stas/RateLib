@@ -1,39 +1,67 @@
 package stas.batura.ratelibrary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 public class RateLibrary {
 
+    private static final String TAG = RateLibrary.class.getSimpleName();
+
+    private DialogClick dialogClick = new DialogClick() {
+        @Override
+        public void onYes() {
+
+            mRated = 1; //если прошли по ссылке то болье диалог не вылезает
+        saveSettings();
+        openRateIntent();
+        }
+
+        @Override
+        public void onNo() {
+            Log.d(TAG, "onNo: no clicked");
+        }
+
+        @Override
+        public void onNever() {
+
+        }
+    };
+
     //preferences keys
     private static final String PREF_NAME = "NotesPref";
-    public static final String NUMBER_OF_OPENS = "Opens"; // количество запусков приложения
-    public static final String IS_RATED = "Rated";       // прошли ли по ссылке в маркет
-    public static final int GOAL_OPEN_NUM = 40;
-    public int mNumberOfOpens;
-    public int mRated;
+    private static final String NUMBER_OF_OPENS = "Opens"; // количество запусков приложения
+    private static final String IS_RATED = "Rated";       // прошли ли по ссылке в маркет
+    private int GOAL_OPEN_NUM = 3;
+    private int mNumberOfOpens;
+    private int mRated;
 
-    Context context;
+    private Context context;
 
-    FragmentManager manager;
+    private FragmentManager manager;
 
     private SharedPreferences mSettings;
 
-    public RateLibrary(Context context, FragmentManager manager) {
+    private String marketUrl = "market://details?id=com.batura.stas.notesaplication";
+
+    private RateLibrary(Context context, FragmentManager manager, int num) {
         this.context = context;
         this.manager = manager;
+        GOAL_OPEN_NUM = num;
         init();
     }
 
-
-    public void showDialog() {
-        MyDialogFragment fragment = new MyDialogFragment();
-
+     public void showDialog() {
+        MyDialogFragment fragment = new MyDialogFragment(dialogClick);
         fragment.show(manager, "RateLib");
     }
 
@@ -50,6 +78,7 @@ public class RateLibrary {
 
     private void init() {
         mSettings = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        loadSettings();
     }
 
     private void saveSettings() {
@@ -69,6 +98,55 @@ public class RateLibrary {
             return true;
         } else {
             return false;
+        }
+
+    }
+
+    private void openRateIntent() {
+        mRated = 1;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(marketUrl));
+        context.startActivity(intent);
+    }
+
+
+    public static class Builder {
+
+        private Context context;
+
+        private FragmentManager manager;
+
+        private int num = 10;
+
+        private String url;
+
+        public Builder() {
+
+        }
+
+        public Builder setContext(@NonNull Context context) {
+            this.context = context;
+            return this;
+        }
+
+        public Builder setFragManager(@NonNull FragmentManager manager) {
+            this.manager = manager;
+            return this;
+        }
+
+        public Builder setNumActions(int num) {
+            this.num = num;
+            return this;
+        }
+
+        public Builder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public RateLibrary build() {
+
+            return new RateLibrary(this.context, this.manager, this.num);
         }
 
     }
