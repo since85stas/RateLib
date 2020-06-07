@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialogTitle">Thx, for rating us!</string>
+    <string name="dialogMessage">If you like this app, please leave us a feedback</string>
+    <string name="dialogYes">Yes, rate now</string>
+    <string name="dialogNo">No, maybe later</string>
+    <string name="dialogYesthx">Thx</string>
+    <string name="dialogNoThx">Thx, for patience</string>
+    <string name="appMarketLink">market://details?id=com.batura.stas.notesaplication</string>
+</resources>
