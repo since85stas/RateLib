@@ -11,19 +11,22 @@ import androidx.fragment.app.DialogFragment;
 
 public class MyDialogFragment extends DialogFragment {
 
-    DialogClick inter;
+    private DialogClick inter;
 
-    public MyDialogFragment(DialogClick inter) {
+    private RateLibrary library;
+
+    public MyDialogFragment(DialogClick inter, RateLibrary library) {
         this.inter = inter;
+        this.library = library;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String title = getString(R.string.dialogTitle);
-        String message = getString(R.string.dialogMessage);
-        String button1String = getString(R.string.dialogYes);
-        String button2String = getString(R.string.dialogNo);
+        String title = library.title;
+        String message = library.text;
+        String button1String = library.positivButtonText;
+        String button2String = library.negativeButtonText;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);  // заголовок

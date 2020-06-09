@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,10 +21,9 @@ public class RateLibrary {
     private DialogClick dialogClick = new DialogClick() {
         @Override
         public void onYes() {
-
             mRated = 1; //если прошли по ссылке то болье диалог не вылезает
-        saveSettings();
-        openRateIntent();
+            saveSettings();
+            openRateIntent();
         }
 
         @Override
@@ -51,17 +51,37 @@ public class RateLibrary {
 
     private SharedPreferences mSettings;
 
-    private String marketUrl = "market://details?id=com.batura.stas.notesaplication";
+    private String marketUrl;
 
-    private RateLibrary(Context context, FragmentManager manager, int num) {
+    String title;
+
+    String text;
+
+    String positivButtonText;
+
+    String negativeButtonText;
+
+    private RateLibrary(Context context,
+                        FragmentManager manager,
+                        int num,
+                        String marketUrl,
+                        String title,
+                        String text,
+                        String positivButtonText,
+                        String negativeButtonText
+                        ) {
         this.context = context;
         this.manager = manager;
         GOAL_OPEN_NUM = num;
+        this.marketUrl  = marketUrl;
+        this.title = title;
+        this.positivButtonText = positivButtonText;
+        this.negativeButtonText = negativeButtonText;
         init();
     }
 
      public void showDialog() {
-        MyDialogFragment fragment = new MyDialogFragment(dialogClick);
+        MyDialogFragment fragment = new MyDialogFragment(dialogClick, this);
         fragment.show(manager, "RateLib");
     }
 
@@ -103,10 +123,14 @@ public class RateLibrary {
     }
 
     private void openRateIntent() {
-        mRated = 1;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(marketUrl));
-        context.startActivity(intent);
+        if (marketUrl != null) {
+            mRated = 1;
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(marketUrl));
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "Wrong app path", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -119,6 +143,14 @@ public class RateLibrary {
         private int num = 10;
 
         private String url;
+
+        private String title = "Thx, for rating us!";
+
+        private String text = "If you like this app, please leave us a feedback";
+
+        private String positivButtonText = "Yes, rate now";
+
+        private String negativeButtonText = "Maybe later";
 
         public Builder() {
 
@@ -144,9 +176,30 @@ public class RateLibrary {
             return this;
         }
 
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setPositivButtonText(String positivButtonText) {
+            this.positivButtonText = positivButtonText;
+            return this;
+        }
+
+        public Builder setNegativeButtonText(String negativeButtonText) {
+            this.negativeButtonText = negativeButtonText;
+            return this;
+        }
+
+        public Builder setText(String text) {
+            this.text = text;
+            return this;
+        }
+
         public RateLibrary build() {
 
-            return new RateLibrary(this.context, this.manager, this.num);
+            return new RateLibrary(this.context, this.manager, this.num, this.url,
+                    this.title, this.text, this.positivButtonText, this.negativeButtonText);
         }
 
     }

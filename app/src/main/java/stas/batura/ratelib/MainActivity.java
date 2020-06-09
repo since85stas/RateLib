@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
          rateLibrary = new  RateLibrary.Builder().setContext(this)
                  .setFragManager(getSupportFragmentManager())
                  .setNumActions(5)
+                 .setText("Test rate")
+                 .setPositivButtonText("Aga")
                  .build();
 
         setContentView(R.layout.activity_main);
