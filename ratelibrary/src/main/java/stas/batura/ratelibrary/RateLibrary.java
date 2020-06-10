@@ -75,6 +75,7 @@ public class RateLibrary {
         GOAL_OPEN_NUM = num;
         this.marketUrl  = marketUrl;
         this.title = title;
+        this.text = text;
         this.positivButtonText = positivButtonText;
         this.negativeButtonText = negativeButtonText;
         init();
@@ -122,7 +123,7 @@ public class RateLibrary {
 
     }
 
-    private void openRateIntent() {
+    public void openRateIntent() {
         if (marketUrl != null) {
             mRated = 1;
             Intent intent = new Intent(Intent.ACTION_VIEW);

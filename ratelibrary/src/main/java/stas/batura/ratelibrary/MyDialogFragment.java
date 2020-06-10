@@ -49,6 +49,8 @@ public class MyDialogFragment extends DialogFragment {
         });
         builder.setCancelable(true);
 
+//        setStyle(DialogFragment.STYLE_NO_FRAME, );
+
         return builder.create();
     }
 }
